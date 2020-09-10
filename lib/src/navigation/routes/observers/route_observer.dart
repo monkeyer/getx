@@ -55,7 +55,7 @@ class GetObserver extends NavigatorObserver {
 
   String name(Route<dynamic> route) {
     if (route?.settings?.name != null) {
-      return route?.settings?.name;
+      return route.settings.name;
     } else if (route is GetPageRoute) {
       return route.routeName;
     } else if (route is GetDialogRoute) {
@@ -77,16 +77,14 @@ class GetObserver extends NavigatorObserver {
 
     if (isSnackbar) {
       GetConfig.log("OPEN SNACKBAR $routeName");
-    } else if (isBottomSheet) {
-      GetConfig.log("OPEN $routeName");
-    } else if (isDialog) {
+    } else if (isBottomSheet || isDialog) {
       GetConfig.log("OPEN $routeName");
     } else if (isGetPageRoute) {
       GetConfig.log("GOING TO ROUTE $routeName");
     }
     GetConfig.currentRoute = routeName;
 
-    _routeSend.update((value) {
+    _routeSend?.update((value) {
       if (route is PageRoute) value.current = routeName;
       value.args = route?.settings?.arguments;
       value.route = route;
@@ -112,16 +110,14 @@ class GetObserver extends NavigatorObserver {
 
     if (isSnackbar) {
       GetConfig.log("CLOSE SNACKBAR $routeName");
-    } else if (isBottomSheet) {
-      GetConfig.log("CLOSE $routeName");
-    } else if (isDialog) {
+    } else if (isBottomSheet || isDialog) {
       GetConfig.log("CLOSE $routeName");
     } else if (isGetPageRoute) {
       GetConfig.log("CLOSE TO ROUTE $routeName");
     }
     GetConfig.currentRoute = routeName;
 
-    _routeSend.update((value) {
+    _routeSend?.update((value) {
       if (previousRoute is PageRoute) {
         value.current = previousRoute?.settings?.name ?? '';
       }
@@ -146,7 +142,7 @@ class GetObserver extends NavigatorObserver {
 
     GetConfig.currentRoute = name(newRoute);
 
-    _routeSend.update((value) {
+    _routeSend?.update((value) {
       if (newRoute is PageRoute) value.current = newRoute?.settings?.name ?? '';
       value.args = newRoute?.settings?.arguments;
       value.route = newRoute;
@@ -165,7 +161,7 @@ class GetObserver extends NavigatorObserver {
     super.didRemove(route, previousRoute);
     GetConfig.log("REMOVING ROUTE ${route?.settings?.name}");
 
-    _routeSend.update((value) {
+    _routeSend?.update((value) {
       value.route = previousRoute;
       value.isBack = false;
       value.removed = route?.settings?.name ?? '';

@@ -85,21 +85,14 @@ class GetPageRoute<T> extends PageRoute<T> {
   }
 
   static bool _isPopGestureEnabled<T>(PageRoute<T> route) {
-    if (route.isFirst) return false;
-
-    if (route.willHandlePopInternally) return false;
-
-    if (route.hasScopedWillPopCallback) return false;
-
-    if (route.fullscreenDialog) return false;
-
-    if (route.animation.status != AnimationStatus.completed) return false;
-
-    if (route.secondaryAnimation.status != AnimationStatus.dismissed) {
-      return false;
-    }
-
-    if (isPopGestureInProgress(route)) return false;
+    // ignore: lines_longer_than_80_chars
+    if (route.isFirst ||
+        route.willHandlePopInternally ||
+        route.hasScopedWillPopCallback ||
+        route.fullscreenDialog ||
+        route.animation.status != AnimationStatus.completed ||
+        route.secondaryAnimation.status != AnimationStatus.dismissed ||
+        isPopGestureInProgress(route)) return false;
 
     return true;
   }
@@ -120,17 +113,15 @@ class GetPageRoute<T> extends PageRoute<T> {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
-    if (binding != null) {
-      binding.dependencies();
-    }
+    GetConfig.currentRoute = settings.name ?? routeName;
+    binding?.dependencies();
     if (bindings != null) {
       for (final binding in bindings) {
         binding.dependencies();
       }
     }
-    final pageWidget = page();
-    GetConfig.currentRoute = settings.name ?? routeName;
-    return pageWidget;
+    // final pageWidget = page();
+    return page();
   }
 
   static bool isPopGestureInProgress(PageRoute<dynamic> route) {
